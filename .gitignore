@@ -1,3 +1,5 @@
 vendor/
 .env
 .idea
+smarty/compiled_templates
+smarty/cache

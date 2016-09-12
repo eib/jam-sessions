@@ -5,6 +5,8 @@
 </head>
 
 <body>
-<h1>Hello, {$username}!</h1>
+{if $logged_in}<h1>Hello, {$user.name}!</h1>
+{else}<a href="login.php">Login via Facebook</a>
+{/if}
 </body>
 </html>

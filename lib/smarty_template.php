@@ -35,15 +35,15 @@ class SmartyTemplate {
         $root_dir = Server::getRootDir();
         $smarty_dir = $root_dir . DIRECTORY_SEPARATOR . 'smarty';
 
-        mkdir("$smarty_dir/compiled_templates");
-
         $smarty = new Smarty();
         $smarty->setTemplateDir("$smarty_dir/templates");
         $smarty->setConfigDir("$smarty_dir/config");
+
+        mkdirp("$smarty_dir/compiled_templates");
         $smarty->setCompileDir("$smarty_dir/compiled_templates");
 
         # Caching
-        mkdir("$smarty_dir/cache");
+        mkdirp("$smarty_dir/cache");
         $smarty->setCacheDir("$smarty_dir/cache");
         #$smarty->setCachingType('pdo');
         #$db = DB::connect();
