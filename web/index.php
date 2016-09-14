@@ -1,8 +1,11 @@
 <?php
 
-$data = [
-    'logged_in' => Auth::isLoggedIn(),
-    'user' => Auth::getUser()
-];
+if (Auth::isLoggedIn()) {
+    $template = 'index.loggedIn.html';
+    $data = ['user' => Auth::getUser()];
+} else {
+    $template = 'index.anonymous.html';
+    $data = NULL;
+}
 
-Templates::display('index.html', $data);
+Templates::display($template, $data);

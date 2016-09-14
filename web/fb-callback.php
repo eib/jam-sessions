@@ -31,9 +31,9 @@ if (!Auth::isLoggedIn()) {
     }
 
     $response = $fb->get('/me?fields=id,name,first_name,middle_name,last_name,email', $accessToken);
-    $user = $response->getGraphUser()->asArray();
-    $user = DAL_User::lookupOrCreate($user);
-    Auth::login($accessToken, $user);
+    $fb_user = $response->getGraphUser()->asArray();
+    list($user, $is_first_login) = DAL_User::lookupOrCreate($fb_user);
+    Auth::login($accessToken, $user, $is_first_login);
 }
 
 $redirect_url = array_get($_GET, 'r', 'index.php');

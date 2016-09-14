@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base href="..">
+<title>sudo make-me-a-sandwich</title>
+<link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+
+<body>
+
+<p>
+    {if $current_user}
+        Logged in as {$current_user.user_name}.
+    {else}
+        Not logged in.
+    {/if}
+</p>
+
+{if $users}
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                {foreach from=$users[0] key=key item=value}
+                <th>{$key}</th>
+                {/foreach}
+            </tr>
+        </thead>
+        {foreach from=$users item=user}
+        <tr>
+            <td>
+                <a href="sudo/impersonate.php?id={$user.user_id}">Impersonate</a>
+            </td>
+            {foreach from=$user item=$value}
+            <td>{$value}</td>
+            {/foreach}
+        </tr>
+        {/foreach}
+    </table>
+{else}
+    <p>No users exist.</p>
+{/if}
+
+<a href=".">Home</a>
+||
+<a href="sudo/fb-login.php">Fake FB Login</a>
+{if $current_user}
+    ||
+    <a href="sudo/logout.php">Log Out</a>
+{/if}
+</body>
+</html>

@@ -1,0 +1,11 @@
+DO
+$$
+BEGIN
+
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+               WHERE CONSTRAINT_NAME = 'fk_emails__user_id') THEN
+    ALTER TABLE emails DROP CONSTRAINT fk_emails__user_id;
+END IF;
+
+END;
+$$;

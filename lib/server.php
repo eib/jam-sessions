@@ -23,8 +23,10 @@ class Server {
 
     public static function redirect($url) {
         if (!headers_sent()) {
-            header('Location: ' . $url); //TODO: prepend path up to document root?
-        } //TODO: else, throw an error or print a link???
+            header('Location: ' . $url); //TODO: prepend path up to document root? (Requires impact analysis)
+        } else {
+            print "<a href='$url'>Go</a>"; //This is an error
+        }
         exit();
     }
 

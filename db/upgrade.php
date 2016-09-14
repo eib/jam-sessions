@@ -18,15 +18,4 @@ foreach (glob('./upgrade/*.sql') as $filename) {
 }
 print "\n";
 
-print "Running tests.\n";
-foreach (glob('./verify/*.sql') as $filename) {
-    print "Testing \"$filename\"...\t";
-    $sql = file_get_contents($filename);
-    try {
-        $db->exec($sql);
-        print "Pass.\n";
-    } catch (Exception $e) {
-        print "Fail.\n";
-    }
-}
-print "Done.\n";
+require_once('verify.php');
