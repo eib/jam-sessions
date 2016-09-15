@@ -10,10 +10,8 @@ if (!function_exists('readline')) {
     }
 }
 
-$table_name = trim(readline('Table Name: '));
-if (!$table_name) {
-    print "No table name.";
-    exit();
+while (!($table_name = trim(readline('Table Name: ')))) {
+    print 'Missing table name.';
 }
 $basename = "$table_name.sql";
 

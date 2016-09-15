@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base href="..">
+<title>Jam Sessions :: Personal Info</title>
+<link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+
+<body>
+<form method="post" action="users/edit.php">
+    <label>
+        User Name: <input type="text" size="70" name="user_name" value="{$user.user_name}">
+    </label>
+    <br>
+    <input type="text" name="first_name" size="30" value="{$user.first_name}" placeholder="First">
+    <input type="text" name="middle_name" size="3" value="{$user.middle_name}" placeholder="M">
+    <input type="text" name="last_name" size="50" value="{$user.last_name}" placeholder="Last">
+    <br>
+    <label>
+        Full Name: <input type="text" size="70" name="full_name" value="{$user.full_name}">
+    </label>
+    <input type="submit" name="submit" value="Save">
+</form>
+</body>
+</html>

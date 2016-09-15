@@ -15,17 +15,23 @@ class Auth {
         return array_get($_SESSION, 'access_token');
     }
 
-    public static function login($accessToken, $user, $is_first_login) {
+    public static function login($access_token, $user, $is_first_login) {
         Session::autoStart();
-        $_SESSION['access_token'] = (string)$accessToken;
+        $_SESSION['access_token'] = (string)$access_token;
+        $_SESSION['is_first_login'] = $is_first_login; #TODO: [Feature] keep an actual login counter (per user)
+        self::setUser($user);
+    }
+
+    public static function setUser($user) {
+        Session::autoStart();
         $_SESSION['current_user'] = $user;
-        $_SESSION['is_first_login'] = $is_first_login; #TODO: It would be cooler to keep a login counter somewhere.
     }
 
     public static function logout() {
         Session::autoStart();
         unset($_SESSION['access_token']);
         unset($_SESSION['current_user']);
+        #TODO: [Feature] Force OAuth users to close their browser via additional "I want to stay logged out" $_SESSION stuffs
     }
 
     public static function getUser() {

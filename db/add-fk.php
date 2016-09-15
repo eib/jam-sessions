@@ -25,7 +25,7 @@ if (!($foreign_column = trim(readline("Foreign Column Name: [$column_name] "))))
 $constraint_name = "fk_{$table_name}__{$column_name}";
 $basename = "$constraint_name.sql";
 
-print "Writing upgrade script.\n";
+print "Writing upgrade script. (TODO: on delete/on update clauses)\n";
 $upgrade_sql = <<<EOD
 DO
 $$
@@ -36,7 +36,10 @@ IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
     ALTER TABLE $table_name
         ADD CONSTRAINT $constraint_name
         FOREIGN KEY ($column_name)
-        REFERENCES $foreign_table_name ($foreign_column);
+        REFERENCES $foreign_table_name ($foreign_column)
+            -- TODO: ON DELETE ???
+            -- TODO: ON UPDATE ???
+        ;
 END IF;
 
 END;

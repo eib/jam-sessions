@@ -11,8 +11,9 @@ $email = array_get($_POST, 'email', 'Rock.Stud@example.org');
 $user = compact('id', 'name', 'first_name', 'middle_name', 'last_name', 'email');
 if (array_get($_POST, 'submit')) {
     //TODO: Validate $user
+    $access_token = uniqid();
     list($user, $is_first_login) = DAL_User::lookupOrCreate($user);
-    Auth::login($accessToken, $user, $is_first_login);
+    Auth::login($access_token, $user, $is_first_login);
 
     Server::redirect('index.php');
 } else {

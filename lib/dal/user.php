@@ -1,7 +1,29 @@
 <?php
 require_once('db.php');
+require_once('dal/email.php');
 
 class DAL_User {
+
+    public static function update($user) {
+        Validator::requireTruthy($user, 'No user');
+        Validator::requirePositiveInt($user['user_id'], 'User ID missing.');
+        Validator::requireNonEmpty($user['user_name'], 'User Name missing.');
+
+        $db = DB::connect();
+        $sql = <<<EOD
+UPDATE users
+SET
+    user_name = :user_name,
+    full_name = :full_name,
+    first_name = :first_name,
+    middle_name = :middle_name,
+    last_name = :last_name
+WHERE user_id = :user_id
+EOD;
+        $stmt = $db->prepare($sql);
+        $params = array_funnel_keys($user, ['user_id', 'user_name', 'full_name', 'first_name', 'middle_name', 'last_name']);
+        $stmt->execute($params);
+    }
 
     public static function lookupOrCreate($fb_user) {
         $db = DB::connect(); #TODO: I'd prefer DI. (But do callers REALLY need to pass the context down??)
@@ -23,7 +45,7 @@ EOD;
             $user_id = $user['user_id'];
             $is_first_login = TRUE;
         }
-        self::addEmailAddress($user_id, $fb_user['email'], $db);
+        DAL_Email::addEmailAddress($user_id, $fb_user['email'], $db);
         return array($user, $is_first_login);
     }
 
@@ -49,15 +71,5 @@ EOD;
         $stmt = $db->prepare($sql);
         $stmt->execute([ 'fb_id' => $fb_id ]);
         return $stmt->fetch();
-    }
-
-    public static function addEmailAddress($user_id, $email_address, PDO $db) {
-        $sql = <<<EOD
-INSERT INTO emails (user_id, email_address)
-   SELECT :user_id, :email_address
-   WHERE NOT EXISTS (SELECT 1 FROM emails WHERE user_id = :user_id AND email_address = :email_address);
-EOD;
-        $stmt = $db->prepare($sql);
-        $stmt->execute(compact('user_id', 'email_address'));
     }
 }
