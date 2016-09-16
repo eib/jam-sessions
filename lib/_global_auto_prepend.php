@@ -1,5 +1,5 @@
 <?php
-$root_dir = dirname(dirname(__FILE__));
+$root_dir = dirname(__DIR__);
 $include_path = join(PATH_SEPARATOR, ['.', "$root_dir/lib", "$root_dir/vendor"]);
 set_include_path($include_path);
 

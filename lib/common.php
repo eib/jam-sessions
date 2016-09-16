@@ -31,3 +31,19 @@ function array_funnel_keys($array, $keys, $default = NULL) {
     $defaults = array_fill_keys($keys, $default);
     return array_merge($defaults, array_intersect_key($array, $defaults));
 }
+
+function starts_with($haystack, $needle) {
+     return substr($haystack, 0, strlen($needle)) === $needle;
+}
+
+function ends_with($haystack, $needle) {
+    $length = strlen($needle);
+    if ($length == 0) {
+        return true;
+    }
+    return substr($haystack, -$length) === $needle;
+}
+
+function string_contains($haystack, $needle) {
+    return strpos($haystack, $needle) !== FALSE;
+}

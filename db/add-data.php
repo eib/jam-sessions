@@ -1,19 +1,16 @@
 #!/usr/bin/env php
 <?php
-$db_dir = dirname(__FILE__);
-chdir($db_dir);
+$root_dir = dirname(__DIR__);
+require_once("$root_dir/lib/_global_auto_prepend.php");
+require_once('db_helpers.php');
 
-if (!function_exists('readline')) {
-    function readline($prompt) {
-        echo $prompt;
-        return stream_get_line(STDIN, 1024, PHP_EOL);
-    }
-}
+chdir("$root_dir/db");
+$version = get_current_version();
 
 while (!($table_name = trim(readline('Table Name: ')))) {
     print "Missing table name.";
 }
-$basename = "$table_name.data.sql";
+$root_name = "$version/data/$table_name";
 
 print "Writing upgrade script. (TODO: add content)\n";
 $upgrade_sql = <<<EOD
@@ -24,15 +21,16 @@ VALUES
 (...)
 ON CONFLICT DO NOTHING;
 EOD;
-file_put_contents("upgrade/zz_$basename", $upgrade_sql);
+file_put_contents("$root_name.upgrade.sql", $upgrade_sql);
 
 print "Writing downgrade script. (TODO: add WHERE clause?)\n";
 $downgrade_sql = <<<EOD
+-- TODO: IF EXISTS(...a table...)
 DELETE FROM $table_name
 -- TODO: WHERE?
 ;
 EOD;
-file_put_contents("downgrade/__$basename", $downgrade_sql);
+file_put_contents("$root_name.downgrade.sql", $downgrade_sql);
 
 print "Writing verify script. (TODO: add WHERE clause?)\n";
 $verify_sql = <<<EOD
@@ -40,6 +38,6 @@ SELECT 1/COUNT(*) FROM $table_name
 -- TODO: WHERE?
 ;
 EOD;
-file_put_contents("verify/$basename", $verify_sql);
+file_put_contents("$root_name.test.sql", $verify_sql);
 
 print "Done.";

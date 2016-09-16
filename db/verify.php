@@ -1,26 +1,21 @@
 #!/usr/bin/env php
 <?php
-$root_dir = dirname(dirname(__FILE__));
+$root_dir = dirname(__DIR__);
 require_once("$root_dir/lib/_global_auto_prepend.php");
-
-print "Connecting to database.\n";
-$db = DB::connect();
+require_once('db_helpers.php');
 
 chdir("$root_dir/db");
-
 print "Running tests.\n";
-$num_tests = 0;
-$num_passed = 0;
-foreach (glob('./verify/*.sql') as $filename) {
-    $num_tests++;
-    print "Testing \"$filename\"...\t";
-    $sql = file_get_contents($filename);
-    try {
-        $db->exec($sql);
-        print "Pass.\n";
-        $num_passed++;
-    } catch (Exception $e) {
-        print "FAIL!!!\n";
-    }
+
+$db = DB::connect();
+list($versions, $patterns) = parse_args(array_slice($argv, 1));
+
+$all_tests = 0;
+$all_passed = 0;
+
+foreach ($versions as $version) {
+    list($num_tests, $num_passed) = run_tests($db, glob("./$version/*/*.test.sql"));
+    $all_tests += $num_tests;
+    $all_passed += $num_passed;
 }
-print "Done. ($num_passed/$num_tests Passed)\n";
+print "Done. ($all_passed/$all_tests Passed)\n";

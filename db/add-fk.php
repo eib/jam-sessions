@@ -1,14 +1,11 @@
 #!/usr/bin/env php
 <?php
-$db_dir = dirname(__FILE__);
-chdir($db_dir);
+$root_dir = dirname(__DIR__);
+require_once("$root_dir/lib/_global_auto_prepend.php");
+require_once('db_helpers.php');
 
-if (!function_exists('readline')) {
-    function readline($prompt) {
-        echo $prompt;
-        return stream_get_line(STDIN, 1024, PHP_EOL);
-    }
-}
+chdir("$root_dir/db");
+$version = get_current_version();
 
 while (!($table_name = trim(readline('Table Name: ')))) {
     print "Need a table name.";
@@ -23,7 +20,7 @@ if (!($foreign_column = trim(readline("Foreign Column Name: [$column_name] "))))
     $foreign_column = $column_name;
 }
 $constraint_name = "fk_{$table_name}__{$column_name}";
-$basename = "$constraint_name.sql";
+$root_name = "$version/constraints/$constraint_name";
 
 print "Writing upgrade script. (TODO: on delete/on update clauses)\n";
 $upgrade_sql = <<<EOD
@@ -45,7 +42,7 @@ END IF;
 END;
 $$;
 EOD;
-file_put_contents("upgrade/z_$basename", $upgrade_sql);
+file_put_contents("$root_name.upgrade.sql", $upgrade_sql);
 
 print "Writing downgrade script.\n";
 $downgrade_sql = <<<EOD
@@ -61,7 +58,7 @@ END IF;
 END;
 $$;
 EOD;
-file_put_contents("downgrade/_$basename", $downgrade_sql);
+file_put_contents("$root_name.downgrade.sql", $downgrade_sql);
 
 print "Writing verify script.\n";
 $verify_sql = <<<EOD
@@ -74,6 +71,6 @@ WHERE
    AND CONSTRAINT_NAME = '$constraint_name';
 
 EOD;
-file_put_contents("verify/$basename", $verify_sql);
+file_put_contents("$root_name.test.sql", $verify_sql);
 
 print "Done.";

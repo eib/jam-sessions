@@ -1,19 +1,23 @@
 #!/usr/bin/env php
 <?php
-print "Reverting the database.\n";
-$root_dir = dirname(dirname(__FILE__));
+$root_dir = dirname(__DIR__);
 require_once("$root_dir/lib/_global_auto_prepend.php");
-
-print "Connecting to database.\n";
-$db = DB::connect();
+require_once('db_helpers.php');
 
 chdir("$root_dir/db");
-print "Running downgrades.\n";
-foreach (glob('./downgrade/*.sql') as $filename) {
-    print "Running \"$filename\":\n";
-    $sql = file_get_contents($filename);
-    print "$sql\n";
-    $result = $db->exec($sql);
-    print "Result: $result\n\n";
+print "Running database downgrades.\n";
+
+$db = DB::connect();
+list($versions, $patterns) = parse_args(array_slice($argv, 1));
+
+$verbose = FALSE;
+
+foreach ($versions as $version) {
+    foreach ($patterns as $pattern) {
+        run_scripts($db, glob("./$version/constraints/$pattern.downgrade.sql"), $verbose);
+        run_scripts($db, glob("./$version/data/$pattern.downgrade.sql"), $verbose);
+        run_scripts($db, glob("./$version/tables/$pattern.downgrade.sql"), $verbose);
+    }
 }
+
 print "Done.\n";

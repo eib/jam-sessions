@@ -1,21 +1,26 @@
 #!/usr/bin/env php
 <?php
-print "Running database upgrades.\n";
-$root_dir = dirname(dirname(__FILE__));
+$root_dir = dirname(__DIR__);
 require_once("$root_dir/lib/_global_auto_prepend.php");
-
-print "Connecting to database.\n";
-$db = DB::connect();
+require_once('db_helpers.php');
 
 chdir("$root_dir/db");
-print "Running upgrades.\n";
-foreach (glob('./upgrade/*.sql') as $filename) {
-    print "Running \"$filename\":\n";
-    $sql = file_get_contents($filename);
-    print "$sql\n";
-    $result = $db->exec($sql);
-    print "Result: $result\n\n";
-}
-print "\n";
+print "Running database upgrades.\n";
 
-require_once('verify.php');
+$db = DB::connect();
+list($versions, $patterns) = parse_args(array_slice($argv, 1));
+
+$verbose = FALSE;
+
+#Upgrade
+foreach ($versions as $version) {
+    foreach ($patterns as $pattern) {
+        run_scripts($db, glob("./$version/tables/$pattern.upgrade.sql"), $verbose);
+        run_scripts($db, glob("./$version/constraints/$pattern.upgrade.sql"), $verbose);
+        run_scripts($db, glob("./$version/data/$pattern.upgrade.sql"), $verbose);
+    }
+}
+echo "\n";
+
+#Test
+require_once(__DIR__ . '/verify.php');
