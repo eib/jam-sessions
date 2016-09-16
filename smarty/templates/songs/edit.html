@@ -1,24 +1,80 @@
 {include file='themes/main/header.html' web_root='..' subtitle='Songs'}
 
+<form method="post" action="songs/edit.php">
+
 <input type="submit" name="save" value="Save (Hidden)" style="display:none;">
 <table>
     <thead>
         <tr>
-            <td>Name</td>
-            <td>Band</td>
-            <td>Key</td>
-            <td>Year</td>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Genre</th>
+            <th>Year</th>
+            <th>Key</th>
             {if $songs}
-            <td><!-- delete --></td>
+            <th><!-- delete --></th>
             {/if}
         </tr>
     </thead>
     <tbody>
+        {foreach from=$songs key=key item=song}
+        <tr>
+            <td>
+                <input type="hidden" name="songs[{$key}][song_title_old]" value="{$song.song_title|escape:'html'}">
+                <input type="text" name="songs[{$key}][song_title]" value="{$song.song_title|escape:'html'}" placeholder="Title" size="20">
+            </td>
+            <td>
+                <input type="hidden" name="songs[{$key}][artist_name_old]" value="{$song.artist_name|escape:'html'}">
+                <input type="text" name="songs[{$key}][artist_name]" value="{$song.artist_name|escape:'html'}" placeholder="Artist" size="20">
+            </td>
+            <td>
+                <input type="hidden" name="songs[{$key}][genre_old]" value="{$song.genre|escape:'html'}">
+                <input type="text" name="songs[{$key}][genre]" value="{$song.genre|escape:'html'}" placeholder="Genre" size="10">
+            </td>
+            <td>
+                <input type="hidden" name="songs[{$key}][year_old]" value="{$song.year|escape:'html'}">
+                <input type="text" name="songs[{$key}][year]" value="{$song.year|escape:'html'}" placeholder="Year" size="4">
+            </td>
+            <td>
+                <input type="hidden" name="songs[{$key}][key_old]" value="{$song.key|escape:'html'}">
+                <input type="text" name="songs[{$key}][key]" value="{$song.key|escape:'html'}" placeholder="Key" size="3">
+            </td>
+            <td>
+                <input type="hidden" name="songs[{$key}][song_id]" value="{$song.song_id}">
+                <button type="submit" name="delete" value="{$song.song_id}">Delete</button>
+            </td>
+        </tr>
+        {/foreach}
 
+        <!-- Add -->
+        <tr>
+            <td>
+                <input type="text" name="new[song_title]" value="{$new.song_title|escape:'html'}" placeholder="Title" size="20">
+            </td>
+            <td>
+                <input type="text" name="new[artist_name]" value="{$new.artist_name|escape:'html'}" placeholder="Artist" size="20">
+            </td>
+            <td>
+                <input type="text" name="new[genre]" value="{$new.genre|escape:'html'}" placeholder="Genre" size="10">
+            </td>
+            <td>
+                <input type="text" name="new[year]" value="{$new.year|escape:'html'}" placeholder="Year" size="4">
+            </td>
+            <td>
+                <input type="text" name="new[key]" value="{$new.key|escape:'html'}" placeholder="Key" size="3">
+            </td>
+            {if $songs}
+            <td></td>
+            {/if}
+        </tr>
     </tbody>
 </table>
 <p>
     <input type="submit" name="save" value="Save">
+    {if $error_message}
+    <span class="error"><em>{$error_message}</em></span>
+    {/if}
 </p>
+</form>
 
 {include file='themes/main/footer.html'}

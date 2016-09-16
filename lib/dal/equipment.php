@@ -1,6 +1,9 @@
 <?php
 require_once('db.php');
 
+/**
+ * Data-access for both `equipment` and `user_equipment` tables.
+ */
 class DAL_Equipment {
     public static function listByUserId($user_id, PDO $db) {
         $sql = <<<EOD
@@ -49,23 +52,15 @@ EOD;
 
         $num_affected = 0;
         foreach ($equipment as $item) {
-            $params = [
-                'user_id' => $user_id,
-                'user_equipment_id' => $item['user_equipment_id'],
-                'equipment_id' => $item['equipment_id'],
-                'description' => $item['description'],
-                'manufacturer' => $item['manufacturer'],
-                'model' => $item['model'],
-                'product_year' => $item['product_year'],
-                'color' => $item['color']
-             ];
+             $params = array_funnel_keys($item, ['user_equipment_id', 'equipment_id', 'description', 'manufacturer', 'model', 'product_year', 'color']);
+             $params['user_id'] = $user_id;
              $stmt->execute($params);
              $num_affected += $stmt->rowCount();
         }
         return $num_affected;
     }
 
-    public static function addUserEquipment($user_id, $equipment, PDO $db) {
+    public static function addUserEquipment($equipment, $user_id, PDO $db) {
         $sql = <<<EOD
 INSERT INTO user_equipment (user_id, equipment_id, description, manufacturer, model, product_year, color)
 VALUES

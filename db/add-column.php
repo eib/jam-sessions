@@ -11,7 +11,7 @@ while (!($table_name = trim(readline('Table Name: ')))) {
     print 'Missing table name.';
 }
 while (!($column_name = trim(readline('Column Name: ')))) {
-    print 'Missing table name.';
+    print 'Missing column name.';
 }
 $root_name = "./$version/columns/{$table_name}__{$column_name}";
 

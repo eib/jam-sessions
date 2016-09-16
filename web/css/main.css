@@ -17,3 +17,7 @@ th, td {
     color: #666666;
     z-index: -1;
 }
+
+.error {
+    color: #DD1111;
+}

@@ -20,26 +20,26 @@ if ($should_update) {
     }
     if ($should_add) {
         $new['equipment_id'] = array_get($new, 'equipment_id') ? $new['equipment_id'] : DEFAULT_EQUIPMENT_ID;
-        DAL_Equipment::addUserEquipment($user_id, $new, $db);
+        DAL_Equipment::addUserEquipment($new, $user_id, $db);
         $new = [];
     }
 }
 $new = array_funnel_keys($new, $fields, '');
 //Update
 if ($should_update) {
-    $edits = array_get($_POST, 'equipment', []);
-    $modified = [];
-    foreach ($edits as $row) {
+    $rows = array_get($_POST, 'equipment', []);
+    $modified_rows = [];
+    foreach ($rows as $row) {
         $is_modified = FALSE;
         foreach ($fields as $field) {
             $is_modified = $is_modified || array_get($row, $field) != array_get($row, "{$field}_orig");
         }
         if ($is_modified) {
-            $modified[] = $row;
+            $modified_rows[] = $row;
         }
     }
-    if (count($modified)) {
-        DAL_Equipment::updateEquipment($modified, $user_id, $db);
+    if (count($modified_rows)) {
+        DAL_Equipment::updateEquipment($modified_rows, $user_id, $db);
     }
 }
 

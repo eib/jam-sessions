@@ -20,7 +20,6 @@
             {foreach from=$equipment key=key item=item}
             <tr>
                 <td>
-                    <input type="hidden" name="equipment[{$key}][user_equipment_id]" value="{$item.user_equipment_id}">
                     <input type="hidden" name="equipment[{$key}][equipment_id_orig]" value="{$item.equipment_id}">
                     <select name="equipment[{$key}][equipment_id]">
                         {foreach from=$equipment_types item=type}
@@ -29,26 +28,27 @@
                     </select>
                 </td>
                 <td>
-                    <input type="hidden" name="equipment[{$key}][description_orig]" value="{$item.description}">
+                    <input type="hidden" name="equipment[{$key}][description_orig]" value="{$item.description|escape:'html'}">
                     <input type="text" name="equipment[{$key}][description]" value="{$item.description|escape:'html'}" placeholder="Description" size="40">
                 </td>
                 <td>
-                    <input type="hidden" name="equipment[{$key}][manufacturer_orig]" value="{$item.manufacturer}">
+                    <input type="hidden" name="equipment[{$key}][manufacturer_orig]" value="{$item.manufacturer|escape:'html'}">
                     <input type="text" name="equipment[{$key}][manufacturer]" value="{$item.manufacturer|escape:'html'}" placeholder="Manufacturer" size="15">
                 </td>
                 <td>
-                    <input type="hidden" name="equipment[{$key}][model_orig]" value="{$item.model}">
+                    <input type="hidden" name="equipment[{$key}][model_orig]" value="{$item.model|escape:'html'}">
                     <input type="text" name="equipment[{$key}][model]" value="{$item.model|escape:'html'}" placeholder="Model #" size="10">
                 </td>
                 <td>
-                    <input type="hidden" name="equipment[{$key}][product_year_orig]" value="{$item.product_year}">
+                    <input type="hidden" name="equipment[{$key}][product_year_orig]" value="{$item.product_year|escape:'html'}">
                     <input type="text" name="equipment[{$key}][product_year]" value="{$item.product_year|escape:'html'}" placeholder="Year" size="4">
                 </td>
                 <td>
-                    <input type="hidden" name="equipment[{$key}][color_orig]" value="{$item.color}">
+                    <input type="hidden" name="equipment[{$key}][color_orig]" value="{$item.color|escape:'html'}">
                     <input type="text" name="equipment[{$key}][color]" value="{$item.color|escape:'html'}" placeholder="Color" size="10">
                 </td>
                 <td>
+                    <input type="hidden" name="equipment[{$key}][user_equipment_id]" value="{$item.user_equipment_id}">
                     <button type="submit" name="delete" value="{$item.user_equipment_id}">Delete</button>
                 </td>
             </tr>
