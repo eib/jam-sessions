@@ -1,0 +1,3 @@
+SELECT 1/COUNT(*)
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'user_parts' and COLUMN_NAME = 'song_preference';

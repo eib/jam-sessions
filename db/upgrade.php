@@ -8,7 +8,7 @@ chdir("$root_dir/db");
 print "Running database upgrades.\n";
 
 $db = DB::connect();
-list($versions, $patterns) = parse_args(array_slice($argv, 1));
+list($versions, $patterns) = parse_args(array_slice($argv, 1), get_current_version());
 
 $verbose = FALSE;
 
@@ -16,6 +16,7 @@ $verbose = FALSE;
 foreach ($versions as $version) {
     foreach ($patterns as $pattern) {
         run_scripts($db, glob("./$version/tables/$pattern.upgrade.sql"), $verbose);
+        run_scripts($db, glob("./$version/columns/$pattern.upgrade.sql"), $verbose);
         run_scripts($db, glob("./$version/constraints/$pattern.upgrade.sql"), $verbose);
         run_scripts($db, glob("./$version/data/$pattern.upgrade.sql"), $verbose);
     }

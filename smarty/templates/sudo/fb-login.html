@@ -1,11 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-<base href="..">
-<title>Impersonate User</title>
-</head>
+{include file='themes/main/header.html' web_root='..' subtitle='Impersonate User'}
 
-<body>
 <form method="post" action="sudo/fb-login.php">
     <label>
         Facebook ID: <input type="text" size="100" name="id" value="{$user.id}">
@@ -26,3 +20,5 @@
 </form>
 </body>
 </html>
+
+{include file='themes/main/footer.html'}

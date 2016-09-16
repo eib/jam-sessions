@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-<base href="..">
-<title>sudo make-me-a-sandwich</title>
-<link rel="stylesheet" type="text/css" href="css/main.css">
-</head>
-
-<body>
+{include file='themes/main/header.html' web_root='..' subtitle='Sudo'}
 
 <p>
     {if $current_user}
@@ -41,12 +33,6 @@
     <p>No users exist.</p>
 {/if}
 
-<a href=".">Home</a>
-||
 <a href="sudo/fb-login.php">Fake FB Login</a>
-{if $current_user}
-    ||
-    <a href="sudo/logout.php">Log Out</a>
-{/if}
-</body>
-</html>
+
+{include file='themes/main/footer.html'}

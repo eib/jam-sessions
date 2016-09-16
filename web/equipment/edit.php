@@ -39,7 +39,7 @@ if ($should_update) {
         }
     }
     if (count($modified)) {
-        DAL_Equipment::updateUserDescriptions($modified, $user_id, $db);
+        DAL_Equipment::updateEquipment($modified, $user_id, $db);
     }
 }
 

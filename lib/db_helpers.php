@@ -1,6 +1,6 @@
 <?php
 
-function parse_args($args) {
+function parse_args($args, $default_version = '*') {
     $versions = [];
     $patterns = [];
     foreach ($args as $arg) {
@@ -19,7 +19,7 @@ function parse_args($args) {
         }
     }
     if (empty($versions)) {
-        $versions[] = '*';
+        $versions[] = $default_version;
     }
     if (empty($patterns)) {
         $patterns[] = '*';
@@ -70,5 +70,9 @@ if (!function_exists('readline')) {
 }
 
 function get_current_version() {
-    return trim(file_read_contents(dirname(__DIR__) . '/db/version.txt'));
+    return trim(file_get_contents(dirname(__DIR__) . '/db/version.txt'));
+}
+
+function set_current_version($version) {
+    file_put_contents(dirname(__DIR__) . '/db/version.txt', $version);
 }

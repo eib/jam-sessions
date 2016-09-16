@@ -30,7 +30,7 @@ EOD;
         return $db->query('SELECT * FROM equipment')->fetchAll();
     }
 
-    public static function updateUserDescriptions($equipment, $user_id, PDO $db) {
+    public static function updateEquipment($equipment, $user_id, PDO $db) {
         $sql = <<<EOD
 UPDATE user_equipment
 SET
