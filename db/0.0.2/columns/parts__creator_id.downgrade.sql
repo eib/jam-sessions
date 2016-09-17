@@ -1,0 +1,1 @@
+ALTER TABLE parts DROP COLUMN IF EXISTS creator_id;

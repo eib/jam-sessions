@@ -36,6 +36,13 @@ class Auth {
 
     public static function getUser() {
         Session::autoStart();
-        return array_get($_SESSION, 'current_user');
+        return array_get($_SESSION, 'current_user', NULL);
+    }
+
+    /* Forces login, if necessary. */
+    public static function getUserID() {
+        self::ensureLoggedIn();
+        $user = self::getUser();
+        return array_get($user, 'user_id');
     }
 }

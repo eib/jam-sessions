@@ -3,7 +3,7 @@ require_once('dal/song.php');
 
 $should_update = array_get($_POST, 'delete') || array_get($_POST, 'add') || array_get($_POST, 'save');
 $fields = ['song_title', 'artist_name', 'genre', 'key', 'year', 'creator_id', 'created_dt', 'modified_dt'];
-$user_id = Auth::getUser()['user_id'];
+$user_id = Auth::getUserID();
 $db = DB::connect();
 
 //Delete

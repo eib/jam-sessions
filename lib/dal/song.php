@@ -3,7 +3,22 @@ require_once('db.php');
 
 //Fields: 'song_id', 'song_title', 'artist_name', 'genre', 'key', 'year', 'creator_id', 'created_dt', 'modified_dt'
 class DAL_Song {
-    public static function listByUserId($user_id, PDO $db) {
+    public static function fetch($song_id, $user_id, PDO $db) {
+        $sql = <<<EOD
+SELECT * FROM songs
+WHERE
+    song_id = :song_id
+    AND creator_id = :user_id
+LIMIT 1
+EOD;
+        $stmt = $db->prepare($sql);
+        if (!$stmt->execute(compact('song_id', 'user_id'))) {
+            return FALSE;
+        }
+        return $stmt->fetch();
+    }
+
+    public static function listByUserID($user_id, PDO $db) {
         $sql = <<<EOD
 SELECT *
 FROM songs

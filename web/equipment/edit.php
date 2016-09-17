@@ -1,10 +1,9 @@
 <?php
 require_once('dal/equipment.php');
-define('DEFAULT_EQUIPMENT_ID', 1); //Other
 
 $should_update = array_get($_POST, 'delete') || array_get($_POST, 'add') || array_get($_POST, 'save');
 $fields = ['equipment_id', 'description', 'manufacturer', 'model', 'product_year', 'color'];
-$user_id = Auth::getUser()['user_id'];
+$user_id = Auth::getUserID();
 $db = DB::connect();
 
 //Delete

@@ -1,11 +1,13 @@
 <?php
 require_once('db.php');
 
+define('DEFAULT_EQUIPMENT_ID', 1); //Other
+
 /**
  * Data-access for both `equipment` and `user_equipment` tables.
  */
 class DAL_Equipment {
-    public static function listByUserId($user_id, PDO $db) {
+    public static function listByUserID($user_id, PDO $db) {
         $sql = <<<EOD
 SELECT
     UE.user_equipment_id,
