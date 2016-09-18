@@ -18,4 +18,4 @@ foreach ($versions as $version) {
     $all_tests += $num_tests;
     $all_passed += $num_passed;
 }
-print "Done. ($all_passed/$all_tests Passed)\n";
+print "Testing done. ($all_passed/$all_tests Passed)\n\n";

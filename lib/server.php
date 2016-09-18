@@ -2,7 +2,7 @@
 
 class Server {
     public static function getRootDir() {
-        return dirname(dirname(__FILE__));
+        return dirname(__DIR__);
     }
 
     public static function get($key) {
@@ -28,6 +28,45 @@ class Server {
             print "<a href='$url'>Go</a>"; //This is an error
         }
         exit();
+    }
+
+    public static function getAbsolutePath($path) {
+        $sep = DIRECTORY_SEPARATOR;
+        $path = str_replace(array('/', '\\'), $sep, $path);
+        $parts = array_filter(explode($sep, $path), 'strlen');
+        $absolutes = array();
+        foreach ($parts as $part) {
+            if ('.' == $part) continue;
+            if ('..' == $part) {
+                array_pop($absolutes);
+            } else {
+                $absolutes[] = $part;
+            }
+        }
+        $is_root_dir = starts_with($path, $sep) || preg_match('/^[a-zA-Z]:\\\\/', $path);
+        $parent = $is_root_dir ? '' : getcwd();
+        return $parent . $sep . implode($sep, $absolutes);
+    }
+
+    /**
+     * Calculate the relative path from $from to $to.
+     * For example:
+     *   Server::getRelativePath('C:\a\b\path', 'C:\a\x\y\file')
+     * ... should be:
+     *   '..\..\x\y\file'
+     */
+    public static function getRelativePath($from, $to, $sep = DIRECTORY_SEPARATOR) {
+        $from_pieces = explode($sep, self::getAbsolutePath($from));
+        $to_pieces = explode($sep, self::getAbsolutePath($to));
+        print_r(compact('from_pieces', 'to_pieces'));
+        while ($from_pieces && $to_pieces && ($from_pieces[0] == $to_pieces[0])) {
+            array_shift($from_pieces);
+            array_shift($to_pieces);
+        }
+        $leading = implode('', array_fill(0, count($from_pieces), "..$sep"));
+        $trailing = implode($sep, $to_pieces);
+        print_r(compact('leading', 'trailing'));
+        return "$leading$trailing";
     }
 
     public static $statusDescriptions = [

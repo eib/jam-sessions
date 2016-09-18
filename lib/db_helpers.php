@@ -24,6 +24,7 @@ function parse_args($args, $default_version = '*') {
     if (empty($patterns)) {
         $patterns[] = '*';
     }
+    sort($versions);
     return array($versions, $patterns);
 }
 
@@ -75,4 +76,26 @@ function get_current_version() {
 
 function set_current_version($version) {
     file_put_contents(dirname(__DIR__) . '/db/version.txt', $version);
+}
+
+function get_schema_versions() {
+    $root_dir = Server::getRootDir();
+    chdir("$root_dir/db");
+    return glob("*.*.*", GLOB_ONLYDIR);
+}
+
+function dump_schema($dest_file) {
+    $url = Server::get('DATABASE_URL');
+    if (!$url) {
+        throw new Exception('No Database URL');
+    }
+    $pieces = parse_url($url);
+    $db_host = $pieces['host'];
+    $db_port = $pieces['port'];
+    $db_name = ltrim($pieces['path'], '/');
+    $db_user = $pieces['user'];
+
+    $command = "pg_dump --schema-only --host=$db_host --port=$db_port --username=$db_user $db_name > \"$dest_file\"";
+    echo "Dumping schema to \"$dest_file\"\n";
+    system($command);
 }

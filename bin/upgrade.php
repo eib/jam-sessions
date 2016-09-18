@@ -9,7 +9,6 @@ print "Running database upgrades.\n";
 
 $db = DB::connect();
 list($versions, $patterns) = parse_args(array_slice($argv, 1), get_current_version());
-
 $verbose = FALSE;
 
 #Upgrade
@@ -25,3 +24,13 @@ echo "\n";
 
 #Test
 require_once(__DIR__ . '/verify.php');
+
+#Dump Schema
+if ($versions = ['*'] && $patterns == ['*']) {
+    $version = get_current_version();
+    $sep = DIRECTORY_SEPARATOR;
+    $schema_file = "$root_dir{$sep}db{$sep}$version{$sep}schema.sql";
+    dump_schema($schema_file);
+}
+
+echo "Done.\n";
