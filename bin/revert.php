@@ -22,9 +22,12 @@ foreach (array_reverse($versions) as $version) {
         run_scripts($db, glob("./$version/tables/$pattern.downgrade.sql"), $verbose);
     }
 }
+echo "\n";
 
 if ($patterns == ['*'] && $versions == [$current_version]) { //Was a full rollback of the current version
     $previous_versions = get_schema_versions();
+
+    #Run Tests
     if (array_pop($previous_versions) == $current_version) { //TODO: all versions up until current_version
         $all_tests = 0;
         $all_passed = 0;
@@ -35,10 +38,20 @@ if ($patterns == ['*'] && $versions == [$current_version]) { //Was a full rollba
         }
         print "Testing done. ($all_passed/$all_tests Passed)\n\n";
     }
-    if ($previous_version = array_pop($previous_versions)) { //There is a previous version to fall back to
-        $sep = DIRECTORY_SEPARATOR;
+
+    #Delete current schema (assuming that a revert will be followed by a re-worked upgrade)
+    $sep = DIRECTORY_SEPARATOR;
+    $current_schema_file = "$root_dir{$sep}db{$sep}$current_version{$sep}schema.sql";
+    if (file_exists($current_schema_file)) {
+        unlink($current_schema_file);
+    }
+
+    #Dump previous schema
+    if ($previous_version = array_pop($previous_versions)) { //Is there a previous version to fall back on?
         $schema_file = "$root_dir{$sep}db{$sep}$previous_version{$sep}schema.sql";
-        dump_schema($schema_file);
+        if (!getenv('SKIP_SCHEMA_DUMP')) {
+            dump_schema($schema_file);
+        }
     }
 }
 

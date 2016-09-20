@@ -43,7 +43,8 @@ CREATE TABLE emails (
     email_address text NOT NULL,
     email_preference smallint DEFAULT 0,
     is_deleted boolean DEFAULT false,
-    created_dt timestamp without time zone DEFAULT now()
+    created_dt timestamp with time zone DEFAULT now(),
+    modified_dt timestamp with time zone DEFAULT now()
 );
 
 
@@ -83,7 +84,9 @@ ALTER SEQUENCE emails_email_id_seq OWNED BY emails.email_id;
 
 CREATE TABLE equipment (
     equipment_id bigint NOT NULL,
-    equipment_name text NOT NULL
+    equipment_name text NOT NULL,
+    created_dt timestamp with time zone DEFAULT now(),
+    modified_dt timestamp with time zone DEFAULT now()
 );
 
 
@@ -116,11 +119,48 @@ ALTER SEQUENCE equipment_equipment_id_seq OWNED BY equipment.equipment_id;
 
 CREATE TABLE friends (
     user_id bigint NOT NULL,
-    friend_id bigint NOT NULL
+    friend_id bigint NOT NULL,
+    created_dt timestamp with time zone DEFAULT now(),
+    modified_dt timestamp with time zone DEFAULT now()
 );
 
 
 ALTER TABLE friends OWNER TO postgres;
+
+--
+-- Name: instruments; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE instruments (
+    instrument_id bigint NOT NULL,
+    description text NOT NULL,
+    created_dt timestamp with time zone DEFAULT now(),
+    modified_dt timestamp with time zone DEFAULT now()
+);
+
+
+ALTER TABLE instruments OWNER TO postgres;
+
+--
+-- Name: instruments_instrument_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE instruments_instrument_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE instruments_instrument_id_seq OWNER TO postgres;
+
+--
+-- Name: instruments_instrument_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE instruments_instrument_id_seq OWNED BY instruments.instrument_id;
+
 
 --
 -- Name: links; Type: TABLE; Schema: public; Owner: postgres
@@ -128,7 +168,9 @@ ALTER TABLE friends OWNER TO postgres;
 
 CREATE TABLE links (
     link_id bigint NOT NULL,
-    url text NOT NULL
+    url text NOT NULL,
+    created_dt timestamp with time zone DEFAULT now(),
+    modified_dt timestamp with time zone DEFAULT now()
 );
 
 
@@ -162,7 +204,12 @@ ALTER SEQUENCE links_link_id_seq OWNED BY links.link_id;
 CREATE TABLE parts (
     part_id bigint NOT NULL,
     song_id bigint NOT NULL,
-    equipment_id bigint NOT NULL
+    instrument_id bigint NOT NULL,
+    description text,
+    key text,
+    tuning text,
+    created_dt timestamp with time zone DEFAULT now(),
+    modified_dt timestamp with time zone DEFAULT now()
 );
 
 
@@ -198,7 +245,9 @@ CREATE TABLE sessions (
     planner_id bigint NOT NULL,
     venue_id bigint,
     start_dt timestamp without time zone,
-    end_dt timestamp without time zone
+    end_dt timestamp without time zone,
+    created_dt timestamp with time zone DEFAULT now(),
+    modified_dt timestamp with time zone DEFAULT now()
 );
 
 
@@ -231,9 +280,13 @@ ALTER SEQUENCE sessions_session_id_seq OWNED BY sessions.session_id;
 
 CREATE TABLE songs (
     song_id bigint NOT NULL,
-    song_name text NOT NULL,
-    band_name text NOT NULL,
-    creator_id bigint NOT NULL
+    song_title text NOT NULL,
+    artist_name text NOT NULL,
+    genre text,
+    key text,
+    year text,
+    created_dt timestamp with time zone DEFAULT now(),
+    modified_dt timestamp with time zone DEFAULT now()
 );
 
 
@@ -307,7 +360,11 @@ ALTER SEQUENCE user_equipment_user_equipment_id_seq OWNED BY user_equipment.user
 
 CREATE TABLE user_parts (
     user_id bigint NOT NULL,
-    part_id bigint NOT NULL
+    part_id bigint NOT NULL,
+    skill_level smallint DEFAULT 0,
+    song_preference smallint DEFAULT 0,
+    created_dt timestamp with time zone DEFAULT now(),
+    modified_dt timestamp with time zone DEFAULT now()
 );
 
 
@@ -324,7 +381,9 @@ CREATE TABLE users (
     full_name text,
     first_name text,
     middle_name text,
-    last_name text
+    last_name text,
+    created_dt timestamp with time zone DEFAULT now(),
+    modified_dt timestamp with time zone DEFAULT now()
 );
 
 
@@ -358,7 +417,9 @@ ALTER SEQUENCE users_user_id_seq OWNED BY users.user_id;
 CREATE TABLE venues (
     venue_id bigint NOT NULL,
     venue_name text NOT NULL,
-    venue_address text
+    venue_address text,
+    created_dt timestamp with time zone DEFAULT now(),
+    modified_dt timestamp with time zone DEFAULT now()
 );
 
 
@@ -397,6 +458,13 @@ ALTER TABLE ONLY emails ALTER COLUMN email_id SET DEFAULT nextval('emails_email_
 --
 
 ALTER TABLE ONLY equipment ALTER COLUMN equipment_id SET DEFAULT nextval('equipment_equipment_id_seq'::regclass);
+
+
+--
+-- Name: instrument_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY instruments ALTER COLUMN instrument_id SET DEFAULT nextval('instruments_instrument_id_seq'::regclass);
 
 
 --
@@ -478,6 +546,22 @@ ALTER TABLE ONLY equipment
 
 ALTER TABLE ONLY friends
     ADD CONSTRAINT friends_pkey PRIMARY KEY (user_id, friend_id);
+
+
+--
+-- Name: instruments_description_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY instruments
+    ADD CONSTRAINT instruments_description_key UNIQUE (description);
+
+
+--
+-- Name: instruments_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY instruments
+    ADD CONSTRAINT instruments_pkey PRIMARY KEY (instrument_id);
 
 
 --
@@ -577,11 +661,11 @@ ALTER TABLE ONLY friends
 
 
 --
--- Name: fk_parts__equipment_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: fk_parts__instrument_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY parts
-    ADD CONSTRAINT fk_parts__equipment_id FOREIGN KEY (equipment_id) REFERENCES equipment(equipment_id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT fk_parts__instrument_id FOREIGN KEY (instrument_id) REFERENCES instruments(instrument_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -606,14 +690,6 @@ ALTER TABLE ONLY sessions
 
 ALTER TABLE ONLY sessions
     ADD CONSTRAINT fk_sessions__venue_id FOREIGN KEY (venue_id) REFERENCES venues(venue_id) ON UPDATE CASCADE ON DELETE SET NULL;
-
-
---
--- Name: fk_songs__creator_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY songs
-    ADD CONSTRAINT fk_songs__creator_id FOREIGN KEY (creator_id) REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE SET NULL;
 
 
 --

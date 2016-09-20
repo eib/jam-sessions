@@ -8,7 +8,7 @@ $db = DB::connect();
 
 //Delete
 if ($song_id = array_get($_POST, 'delete')) {
-    DAL_Song::deleteSong($song_id, $user_id, $db);
+    DAL_Song::deleteSong($song_id, $db);
 }
 //Add
 $error_message = NULL;
@@ -20,7 +20,7 @@ if ($should_update) {
     }
     if ($should_add) {
         if (array_get($new, 'song_title')) {
-            DAL_Song::addSong($new, $user_id, $db);
+            DAL_Song::addSong($new, $db);
             $new = [];
         } else {
             $error_message = '* Song Title is required.';
@@ -42,10 +42,10 @@ if ($should_update) {
         }
     }
     if (count($modified_rows)) {
-        DAL_Song::updateSongs($modified_rows, $user_id, $db);
+        DAL_Song::updateSongs($modified_rows, $db);
     }
 }
 
-$songs = DAL_Song::listByUserID($user_id, $db);
+$songs = DAL_Song::listAll($db);
 
 Templates::display('songs/edit.html', compact('songs', 'new', 'error_message'));

@@ -3,3 +3,4 @@ vendor/
 .idea
 smarty/compiled_templates
 smarty/cache
+db/schema-tmp.sql

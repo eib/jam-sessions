@@ -13,7 +13,14 @@ while (!($table_name = trim(readline('Table Name: ')))) {
 $root_name = "$version/tables/$table_name";
 
 print "Writing upgrade script (TODO: add columns).\n";
-$upgrade_sql = "CREATE TABLE IF NOT EXISTS $table_name (\n-- TODO: implement\n);\n";
+$upgrade_sql = <<<EOD
+CREATE TABLE IF NOT EXISTS $table_name (
+    {$table_name}_id bigserial PRIMARY KEY,
+    -- TODO: implement
+    created_dt timestamp with time zone DEFAULT now(),
+    modified_dt timestamp with time zone DEFAULT now()
+);
+EOD;
 file_put_contents("$root_name.upgrade.sql", $upgrade_sql);
 
 print "Writing downgrade script.\n";

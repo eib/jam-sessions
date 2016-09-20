@@ -1,0 +1,87 @@
+{include file='themes/main/header.html' web_root='..' subtitle='Parts'}
+
+<h3>Parts for {$song.song_title}{if $song.artist_name} by {$song.artist_name}{/if}</h3>
+<form method="post" action="users/my-parts.php?song_id={$song.song_id}">
+    <input type="submit" name="save" value="Save (Hidden)" style="display:none;">
+    <table>
+        <thead>
+        <tr>
+            <th>Part</th>
+            <th>Play?</th>
+            <th>Skill Level</th>
+            <th>Preference</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach from=$parts key=key item=part}
+            {let part_id=$part.part_id}
+            {let user_part=$user_parts_by_part[$part_id]|default:[]}
+            {let has_user_part=$user_part.part_id|default:NULL}
+        <tr>
+            <td>
+                <input type="hidden" name="user_parts[{$part_id}][part_id_old]" value="{$has_user_part}">
+                {$part.instrument_name}
+                {if $part.description}({$part.description}){/if}
+            </td>
+            <td>
+                <input type="checkbox" class="js-checkbox"
+                       name="user_parts[{$part_id}][part_id]" value="{$part_id}"{if $has_user_part} checked="checked"{/if}>
+            </td>
+            <td>
+                {let skill_level=$user_part.skill_level|default:0}
+                <input type="hidden" name="user_parts[{$part_id}][skill_level_old]" value="{$skill_level|escape:'html'}">
+                <select name="user_parts[{$part_id}][skill_level]" class="js-toggle-{$part_id}">
+                    {foreach from=$skill_levels key=key item=level}
+                    <option value="{$key}"{if $key == $skill_level} selected="selected"{/if}>{$level}</option>
+                    {/foreach}
+                </select>
+            </td>
+            <td>
+                {let song_preference=$user_part.song_preference|default:0}
+                <input type="hidden" name="user_parts[{$part_id}][song_preference_old]" value="{$song_preference|escape:'html'}">
+                <select name="user_parts[{$part_id}][song_preference]" class="js-toggle-{$part_id}">
+                    {foreach from=$preferences key=key item=preference}
+                    <option value="{$key}"{if $key == $song_preference} selected="selected"{/if}>{$preference}</option>
+                    {/foreach}
+                </select>
+            </td>
+        </tr>
+        {/foreach}
+
+        </tbody>
+    </table>
+    <p>
+        <input type="submit" name="save" value="Save">
+        {if $error_message}
+            <span class="error"><em>{$error_message}</em></span>
+        {/if}
+    </p>
+</form>
+
+<script type="text/javascript">
+if (document.querySelectorAll) {
+    var toArray = Array.prototype.slice,
+        checkBoxes = toArray.call(document.querySelectorAll('.js-checkbox'));
+    function updateInputs() {
+        var isDisabled,
+            partId,
+            matchingInputs;
+        for (var ii = 0; ii < checkBoxes.length; ii++) {
+            isChecked = checkBoxes[ii].checked;
+            partId = checkBoxes[ii].value;
+            matchingInputs = toArray.call(document.querySelectorAll('.js-toggle-' + partId));
+            for (var jj = 0; jj < matchingInputs.length; jj++) {
+                matchingInputs[jj].disabled = !isChecked;
+            }
+        }
+    }
+    (function () {
+        for (var ii = 0; ii < checkBoxes.length; ii++) {
+            checkBoxes[ii].addEventListener('change', updateInputs);
+        }
+    })();
+    updateInputs();
+}
+</script>
+
+{include file='themes/main/footer.html'}

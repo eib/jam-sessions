@@ -1,4 +1,6 @@
 web/debug
 web/sudo
+web/admin
+smarty/templates/admin
 smarty/templates/sudo
 docs

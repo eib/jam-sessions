@@ -1,1 +1,0 @@
-ALTER TABLE parts DROP COLUMN IF EXISTS modified_dt;

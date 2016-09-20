@@ -30,7 +30,9 @@ if ($versions = ['*'] && $patterns == ['*']) {
     $version = get_current_version();
     $sep = DIRECTORY_SEPARATOR;
     $schema_file = "$root_dir{$sep}db{$sep}$version{$sep}schema.sql";
-    dump_schema($schema_file);
+    if (!getenv('SKIP_SCHEMA_DUMP')) {
+        dump_schema($schema_file);
+    }
 }
 
 echo "Done.\n";

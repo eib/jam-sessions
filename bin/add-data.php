@@ -8,7 +8,7 @@ chdir("$root_dir/db");
 $version = get_current_version();
 
 while (!($table_name = trim(readline('Table Name: ')))) {
-    print "Missing table name.";
+    print "Missing table name.\n";
 }
 $root_name = "$version/data/$table_name";
 

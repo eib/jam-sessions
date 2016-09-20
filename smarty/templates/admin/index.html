@@ -1,0 +1,39 @@
+{include file='themes/main/header.html' web_root='..' subtitle='Admin'}
+
+<p>
+    {if $current_user}
+        Logged in as {$current_user.user_name}.
+    {else}
+        Not logged in.
+    {/if} |
+    <a href="info.php">PHP INFO</a> |
+    <a href="sessions.php">$_SESSION</a> |
+    <a href="admin/fb-login.php">Fake FB Login</a>
+</p>
+
+{if $users}
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                {foreach from=$users[0] key=key item=value}
+                <th>{$key}</th>
+                {/foreach}
+            </tr>
+        </thead>
+        {foreach from=$users item=user}
+        <tr>
+            <td>
+                <a href="admin/impersonate.php?id={$user.user_id}">Impersonate</a>
+            </td>
+            {foreach from=$user item=$value}
+            <td>{$value}</td>
+            {/foreach}
+        </tr>
+        {/foreach}
+    </table>
+{else}
+    <p>No users exist.</p>
+{/if}
+
+{include file='themes/main/footer.html'}

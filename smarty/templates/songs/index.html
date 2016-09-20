@@ -1,18 +1,23 @@
-{include file='themes/main/header.html' web_root='..' subtitle='Equipment'}
+{include file='themes/main/header.html' web_root='..' subtitle='Songs'}
 
 {if $songs}
-<h3>Your Songs</h3>
+<h3>Manage Songs</h3>
 <ul>
 {foreach from=$songs item=song}
     <li>
-        <a href="parts/edit.php?song_id={$song.song_id}">Manage Parts</a>
+        <a href="songs/song-parts.php?song_id={$song.song_id}">Add/Edit Parts</a>
         for
         {$song.song_title} {if $song.artist_name}by {$song.artist_name}{/if}
     </li>
 {/foreach}
 </ul>
-{/if}
 
 <a href="songs/edit.php">Add/Edit Songs</a>
+
+{else}
+    <p>
+        No songs. Please <a href="songs/edit.php">Add Songs</a>.
+    </p>
+{/if}
 
 {include file='themes/main/footer.html'}

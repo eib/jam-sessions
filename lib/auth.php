@@ -10,9 +10,20 @@ class Auth {
         }
     }
 
+    public static function requireAdmin() {
+        if (!self::isAdmin()) {
+            Server::sendStatus(403);
+        }
+    }
+
     public static function isLoggedIn() {
         Session::autoStart();
         return array_get($_SESSION, 'access_token');
+    }
+
+    public static function isAdmin() {
+        //TODO: implement something (e.g. user_id/some other flags/admin_users table)
+        return TRUE;
     }
 
     public static function login($access_token, $user, $is_first_login) {

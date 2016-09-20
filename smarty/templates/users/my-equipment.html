@@ -1,0 +1,93 @@
+{include file='themes/main/header.html' web_root='..' subtitle='Equipment'}
+
+<form method="post" action="users/my-equipment.php">
+    <input type="submit" name="save" value="Save (Hidden)" style="display:none;">
+    <table>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Name/Description</th>
+                <th>Manufacturer</th>
+                <th>Model</th>
+                <th>Year</th>
+                <th>Color</th>
+                {if $equipment}
+                <th><!-- delete --></th>
+                {/if}
+            </tr>
+        </thead>
+        <tbody>
+            {foreach from=$equipment key=key item=item}
+            <tr>
+                <td>
+                    <input type="hidden" name="equipment[{$key}][equipment_id_old]" value="{$item.equipment_id}">
+                    <select name="equipment[{$key}][equipment_id]">
+                        {foreach from=$equipment_types item=type}
+                        <option value="{$type.equipment_id}"{if $item.equipment_id == $type.equipment_id} selected="selected"{/if}>{$type.equipment_name|escape:'html'}</option>
+                        {/foreach}
+                    </select>
+                </td>
+                <td>
+                    <input type="hidden" name="equipment[{$key}][description_old]" value="{$item.description|escape:'html'}">
+                    <input type="text" name="equipment[{$key}][description]" value="{$item.description|escape:'html'}" placeholder="Description" size="40">
+                </td>
+                <td>
+                    <input type="hidden" name="equipment[{$key}][manufacturer_old]" value="{$item.manufacturer|escape:'html'}">
+                    <input type="text" name="equipment[{$key}][manufacturer]" value="{$item.manufacturer|escape:'html'}" placeholder="Manufacturer" size="15">
+                </td>
+                <td>
+                    <input type="hidden" name="equipment[{$key}][model_old]" value="{$item.model|escape:'html'}">
+                    <input type="text" name="equipment[{$key}][model]" value="{$item.model|escape:'html'}" placeholder="Model #" size="10">
+                </td>
+                <td>
+                    <input type="hidden" name="equipment[{$key}][product_year_old]" value="{$item.product_year|escape:'html'}">
+                    <input type="text" name="equipment[{$key}][product_year]" value="{$item.product_year|escape:'html'}" placeholder="Year" size="4">
+                </td>
+                <td>
+                    <input type="hidden" name="equipment[{$key}][color_old]" value="{$item.color|escape:'html'}">
+                    <input type="text" name="equipment[{$key}][color]" value="{$item.color|escape:'html'}" placeholder="Color" size="10">
+                </td>
+                <td>
+                    <input type="hidden" name="equipment[{$key}][user_equipment_id]" value="{$item.user_equipment_id}">
+                    <button type="submit" name="delete" value="{$item.user_equipment_id}">Delete</button>
+                </td>
+            </tr>
+            {/foreach}
+
+            <!-- Add -->
+            <tr>
+                <td>
+                    <select name="new[equipment_id]">
+                        <option value="" selected="selected">-- Choose type</option>
+                        {foreach from=$equipment_types item=type}
+                        <option value="{$type.equipment_id}"{if $new.equipment_id == $type.equipment_id} selected="selected"{/if}>{$type.equipment_name}</option>
+                        {/foreach}
+                    </select>
+                </td>
+                <td>
+                    <input type="text" name="new[description]" value="{$new.description|escape:'html'}" placeholder="Description" size="40">
+                </td>
+                <td>
+                    <input type="text" name="new[manufacturer]" value="{$new.manufacturer|escape:'html'}" placeholder="Manufacturer" size="15">
+                </td>
+                <td>
+                    <input type="text" name="new[model]" value="{$new.model|escape:'html'}" placeholder="Model #" size="10">
+                </td>
+                <td>
+                    <input type="text" name="new[product_year]" value="{$new.product_year|escape:'html'}" placeholder="Year" size="4">
+                </td>
+                <td>
+                    <input type="text" name="new[color]" value="{$new.color|escape:'html'}" placeholder="Color" size="10">
+                </td>
+                {if $equipment}
+                <td></td>
+                {/if}
+            </tr>
+        </tbody>
+    </table>
+    <p>
+        <input type="submit" name="save" value="Save">
+    </p>
+</form>
+
+{include file='themes/main/footer.html'}

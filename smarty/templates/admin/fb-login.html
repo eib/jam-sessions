@@ -1,0 +1,24 @@
+{include file='themes/main/header.html' web_root='..' subtitle='Impersonate User'}
+
+<form method="post" action="admin/fb-login.php">
+    <label>
+        Facebook ID: <input type="text" size="100" name="id" value="{$user.id}">
+    </label>
+    <br>
+    <label>
+        Full Name: <input type="text" size="70" name="name" value="{$user.name}">
+    </label>
+    <br>
+    <input type="text" name="first_name" size="30" value="{$user.first_name}" placeholder="First">
+    <input type="text" name="middle_name" size="3" value="{$user.middle_name}" placeholder="M">
+    <input type="text" name="last_name" size="50" value="{$user.last_name}" placeholder="Last">
+    <br>
+    <label>
+        Email: <input type="text" name="email" size="100" value="{$user.email}">
+    </label>
+    <input type="submit" name="submit" value="Login">
+</form>
+</body>
+</html>
+
+{include file='themes/main/footer.html'}

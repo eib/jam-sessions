@@ -8,13 +8,13 @@ chdir("$root_dir/db");
 $version = get_current_version();
 
 while (!($table_name = trim(readline('Table Name: ')))) {
-    print 'Missing table name.';
+    print "Missing table name.\n";
 }
 while (!($old_column_name = trim(readline('Old Column Name: ')))) {
-    print 'Missing column name.';
+    print "Missing column name.\n";
 }
 while (!($new_column_name = trim(readline('New Column Name: ')))) {
-    print 'Missing column name.';
+    print "Missing column name.\n";
 }
 $root_name = "./$version/columns/{$table_name}__{$old_column_name}__{$new_column_name}";
 
@@ -60,4 +60,4 @@ WHERE TABLE_NAME = '$table_name' and COLUMN_NAME = '$new_column_name';
 EOD;
 file_put_contents("$root_name.test.sql", $verify_sql);
 
-print "Done.";
+print "Done.\n";

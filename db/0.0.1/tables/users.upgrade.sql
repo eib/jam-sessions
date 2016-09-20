@@ -5,5 +5,7 @@ CREATE TABLE IF NOT EXISTS users (
     full_name text DEFAULT NULL,
     first_name text DEFAULT NULL,
     middle_name text DEFAULT NULL,
-    last_name text DEFAULT NULL
+    last_name text DEFAULT NULL,
+    created_dt timestamp with time zone DEFAULT now(),
+    modified_dt timestamp with time zone DEFAULT now()
 );

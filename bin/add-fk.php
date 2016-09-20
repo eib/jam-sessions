@@ -8,13 +8,13 @@ chdir("$root_dir/db");
 $version = get_current_version();
 
 while (!($table_name = trim(readline('Table Name: ')))) {
-    print "Need a table name.";
+    print "Need a table name.\n";
 }
 while (!($column_name = trim(readline('Column Name: ')))) {
-    print "Need a column name.";
+    print "Need a column name.\n";
 }
 while (!($foreign_table_name = trim(readline("Foreign Table Name: ")))) {
-    print "Need a foreign table name.";
+    print "Need a foreign table name.\n";
 }
 if (!($foreign_column = trim(readline("Foreign Column Name: [$column_name] ")))) {
     $foreign_column = $column_name;
@@ -34,8 +34,8 @@ IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
         ADD CONSTRAINT $constraint_name
         FOREIGN KEY ($column_name)
         REFERENCES $foreign_table_name ($foreign_column)
-            -- TODO: ON DELETE ???
-            -- TODO: ON UPDATE ???
+            -- TODO: ON DELETE CASCADE
+            -- TODO: ON UPDATE CASCADE;
         ;
 END IF;
 

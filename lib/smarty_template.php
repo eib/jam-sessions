@@ -3,6 +3,7 @@ require_once('smarty/smarty/libs/Smarty.class.php');
 require_once('server.php');
 #require_once('smarty_cache_resource_pdo.php');
 #require_once('db.php');
+require_once('smarty_helpers.php');
 
 class SmartyTemplate {
     public $template_name;
@@ -36,7 +37,7 @@ class SmartyTemplate {
         $smarty_dir = $root_dir . DIRECTORY_SEPARATOR . 'smarty';
 
         $smarty = new Smarty();
-        $smarty->setTemplateDir("$smarty_dir/templates");
+        $smarty->setTemplateDir("$smarty_dir/templates"); #TODO: I want to move templates up to the root dir
         $smarty->setConfigDir("$smarty_dir/config");
 
         mkdirp("$smarty_dir/compiled_templates");
